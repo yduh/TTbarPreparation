@@ -14,13 +14,13 @@ RunSB=false
 
 RunUnc_EXP=false
 RunUnc_EXPBCK=false
-RunUnc_TH=true
+RunUnc_TH=false
 RunUnc_THBCK=false
 RunUnc_JES=false
 RunUnc_pT=false
 
 RunMultiSBs=false
-RunUnc_QCD=false
+RunUnc_QCD=true
 
 
 if $CR; then
@@ -91,17 +91,18 @@ if $RunSB; then
 fi
 
 if $RunUnc_QCD; then
-	./runskimSB.sh ${njets} "comp1" false
-	python ${TbckSCRIPT} ${njets} "comp1"
-	
-	./runskimSB.sh ${njets} "comp2" false
-	python ${TbckSCRIPT} ${njets} "comp2"
+	#./runskimSB.sh ${njets} "comp1" false
+	#python ${TbckSCRIPT} ${njets} "comp1"
+	#./runskimSB.sh ${njets} "comp2" false
+	#python ${TbckSCRIPT} ${njets} "comp2"
 
-	./runskimSB.sh ${njets} "CSVUp" false
-	python ${TbckSCRIPT} ${njets} "CSVUp"
+	#./runskimSB.sh ${njets} "CSVUp" false
+	#python ${TbckSCRIPT} ${njets} "CSVUp"
+	#./runskimSB.sh ${njets} "CSVDown" false
+	#python ${TbckSCRIPT} ${njets} "CSVDown"
 	
-	./runskimSB.sh ${njets} "CSVDown" false
-	python ${TbckSCRIPT} ${njets} "CSVDown"
+	./runskimSB.sh ${njets} "Aless0.3" $CR
+	python ${TbckSCRIPT} ${njets} "Aless0.3"
 fi
 
 if $RunMultiSBs; then
@@ -134,13 +135,13 @@ if $RunUnc_TH; then
 	echo "Theoretical uncertainties:"
 	runsysthList1='fsUp fsDown rsUp rsDown rsfsSSUp rsfsSSDown bdecayUp bdecayDown bfragUp bfragDown'
 	#runsysthList2='MCs/tt_mtop1755_PowhegP8 MCs/tt_mtop1695_PowhegP8 MCs/tt_hdup_PowhegP8 MCs/tt_hddown_PowhegP8 MCs/tt_isrup_PowhegP8 MCs/tt_isrdown_PowhegP8 MCs/tt_fsrup_PowhegP8 MCs/tt_fsrdown_PowhegP8 MCs/tt_tuneup_PowhegP8 MCs/tt_tunedown_PowhegP8 MCs/tt_erdon_PowhegP8'
-	runsysthList2='MCs/tt_mtop1735new_PowhegP8 MCs/tt_mtop1715new_PowhegP8 MCs/tt_mtop1735old_PowhegP8 MCs/tt_mtop1715old_PowhegP8 MCs/tt_mtop1735_PowhegP8 MCs/tt_mtop1713_PowhegP8'
+	runsysthList2='MCs/tt_mtop1735new_PowhegP8 MCs/tt_mtop1715new_PowhegP8 MCs/tt_mtop1735old_PowhegP8 MCs/tt_mtop1715old_PowhegP8 MCs/tt_mtop1735_PowhegP8 MCs/tt_mtop1715_PowhegP8'
 
-	#for unc in $runsysthList1; 
-	#do
-	#	echo $unc
-	#	python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
-	#done
+	for unc in $runsysthList1; 
+	do
+		echo $unc
+		python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
+	done
 	for unc in $runsysthList2; 
 	do
 		echo $unc

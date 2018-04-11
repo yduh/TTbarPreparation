@@ -9,7 +9,8 @@ from vararg import Varargs
 
 folderskimroot = "skimroot"
 if sys.argv[1][2:6] == 'Tbck':
-	if 'comp' in sys.argv[-1] or 'CSV' in sys.argv[-1]:
+	#if 'comp' in sys.argv[-1] or 'CSV' in sys.argv[-1]:
+	if 'noEW' not in sys.argv[-1]:
 		folderskimroot = 'skimrootSB_'+sys.argv[-1]
 	else:
 		folderskimroot = 'skimrootSB'
@@ -46,16 +47,21 @@ for i in range(len(sys.argv[3:-1])):
 		if(sys.argv[2][0:3] == 'QCD' or sys.argv[2].split("/")[-1][0:3] == 'QCD'):
 			if(len(sys.argv[2].split("/")) == 2):
 				qcdscale = eval(sys.argv[2].split("/")[-1]+'scale')
+				print "norm qcd scale", str(sys.argv[2].aplit("/")[-1]+'scale'), qcdscale, histname
 			else:
 				qcdscale = eval(sys.argv[2]+'scale')
+				print "norm qcd scale", str(sys.argv[2]+'scale'), qcdscale, histname
 			his.Scale(qcdscale)
 			Hists.append(his)
 		else:
 			if sys.argv[-1] == 'nnlopT':
 				his.Scale(ttpowheg)
 				his.Scale(0.966289105862) #this value is the ratio of inclusive XS of NLO/NNLO QCD calculation printing out by pt_check/NNLO/spectrum.py
+				print "norm nnlopT scale 0.966289105862", histname
 			else:
 				his.Scale(float(ScaleBook.MappingScales[sys.argv[2].split("/")[-1]]))
+				print "norm all oters scale", sys.argv[2].split("/")[-1], float(ScaleBook.MappingScales[sys.argv[2].split("/")[-1]]), histname
+
 			if info.getHistDim() == 1:
 				for ibin in range(his.GetXaxis().GetNbins()):
 					if his.GetBinContent(ibin+1)< 0:

@@ -15,7 +15,7 @@ kint = Varargs().DefaultVarDict['_Mtt_delY'].saveName+"_RECO"
 
 
 #=====================================================================
-def getTQCD(skimType):
+
 fdata = r.TFile("./%s/%s/skim_DATA.root" %(njets,skimType))
 ftt = r.TFile("./%s/%s/skim_tt_PowhegP8_%s.root" %(njets,skimType,nominal))
 ft = r.TFile("./%s/%s/skim_t.root" %(njets,skimType))
