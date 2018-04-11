@@ -9,12 +9,12 @@ from math import sqrt
 njets = sys.argv[1]
 nominal = sys.argv[2]
 
-skimType = 'skimrootSB'
-#if nominal in 'comp1' or nominal in 'comp2' or nominal in 'CSVUp' or nominal in 'CSVDown':
-#	skimType = 'skimrootSB_%s' %nominal
+skimType = 'skimrootSB' if nominal == "noEW" else 'skimrootSB_'+nominal
 
 kint = Varargs().DefaultVarDict['_Mtt_delY'].saveName+"_RECO"
 
+
+#=====================================================================
 def getTQCD(skimType):
 fdata = r.TFile("./%s/%s/skim_DATA.root" %(njets,skimType))
 ftt = r.TFile("./%s/%s/skim_tt_PowhegP8_%s.root" %(njets,skimType,nominal))
@@ -54,7 +54,7 @@ hTbckY = hTbck.ProjectionY()
 
 #=====================================================================
 fqcdSR = r.TFile("./%s/skimroot/skim_QCD.root" %njets)
-fqcdCR = r.TFile("./%s/skimrootSB/skim_QCD.root" %njets)
+fqcdCR = r.TFile("./%s/%s/skim_QCD.root" %(njets,skimType))
 
 numqcdSR = fqcdSR.Get(kint).Integral()
 numqcdCR = fqcdCR.Get(kint).Integral()
@@ -88,4 +88,3 @@ outfile.Close()
 #=====================================================================
 
 
-fqcdA = r.TFile('./%s/skimroot_Aless0.3/skim_QCD')
