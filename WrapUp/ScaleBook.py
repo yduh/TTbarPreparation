@@ -47,9 +47,9 @@ MappingScales["tt_PowhegP8"] = ttpowheg
 MappingScales["tt_aMCatNLO"] = ttamcatnlo
 MappingScales["tt_PowhegHpp"] = ttpowheghpp
 
-MappingScales["tt_mtop1735_PowhegP8"] = ttpowheg_mtnewup
-MappingScales["tt_mtop1735_PowhegP8"] = ttpowheg_mtnewup
-MappingScales["tt_mtop1715new_PowhegP8"] = ttpowheg_mtnewdown
+MappingScales["tt_mtop1735_PowhegP8"] = ttpowheg_mtup
+MappingScales["tt_mtop1715_PowhegP8"] = ttpowheg_mtdown
+MappingScales["tt_mtop1735new_PowhegP8"] = ttpowheg_mtnewup
 MappingScales["tt_mtop1715new_PowhegP8"] = ttpowheg_mtnewdown
 MappingScales["tt_mtop1735old_PowhegP8"] = ttpowheg_mtoldup
 MappingScales["tt_mtop1715old_PowhegP8"] = ttpowheg_mtolddown
