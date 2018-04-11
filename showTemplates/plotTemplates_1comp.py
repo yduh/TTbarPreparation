@@ -6,7 +6,6 @@ SavePlots = True
 evtRangeUp = float(sys.argv[3]) #24000 #int(h.GetMaximum()/1000)+1
 sysRangeDown = -float(sys.argv[4])
 sysRangeUp = float(sys.argv[4])
-print len(sys.argv)
 protagonist = sys.argv[5] if len(sys.argv) >5 else 'ttsig'
 
 #-----------------------------------------------------#
@@ -88,8 +87,8 @@ for ibin in range(h.GetXaxis().GetNbins()):
 	hup.GetXaxis().LabelsOption('v')
 	hdw.GetXaxis().LabelsOption('v')
 
-hrup = createRatio(hup, createH(f, protagonist), ROOT.kRed, "%s" %('t#bar{t}' if (sys.argv)<6 else protagonist))
-hrdw = createRatio(hdw, createH(f, protagonist), ROOT.kBlue,"%s" %('t#bar{t}' if (sys.argv)<6 else protagonist))
+hrup = createRatio(hup, createH(f, protagonist), ROOT.kRed, "%s" %(protagonist if len(sys.argv) >5 else 't#bar{t}'))
+hrdw = createRatio(hdw, createH(f, protagonist), ROOT.kBlue,"%s" %(protagonist if len(sys.argv) >5 else 't#bar{t}'))
 c, pad1, pad2 = createCanvasPads2()
 
 pad1.cd()
