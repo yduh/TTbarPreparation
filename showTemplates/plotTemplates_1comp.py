@@ -6,6 +6,8 @@ SavePlots = True
 evtRangeUp = float(sys.argv[3]) #24000 #int(h.GetMaximum()/1000)+1
 sysRangeDown = -float(sys.argv[4])
 sysRangeUp = float(sys.argv[4])
+print len(sys.argv)
+protagonist = sys.argv[5] if len(sys.argv) >5 else 'ttsig'
 
 #-----------------------------------------------------#
 def cmstext():
@@ -65,8 +67,9 @@ f = ROOT.TFile('/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/URStatTools/Input/%s/ch
 #f = ROOT.TFile('~/public/lucien/%s/ch%s_ini.root' %(sys.argv[1],sys.argv[1]))
 
 h = createH(f, 'ttsig')
-hup = createHUp(f, 'ttsig', sys.argv[2], ROOT.kRed)
-hdw = createHDw(f, 'ttsig', sys.argv[2], ROOT.kBlue)
+hup = createHUp(f, protagonist, sys.argv[2], ROOT.kRed)
+hdw = createHDw(f, protagonist, sys.argv[2], ROOT.kBlue)
+print hup, hdw
 h_st = createH(f, 'st')
 h_vj = createH(f, 'vj')
 h_qcd = createH(f, 'qcd')
@@ -85,8 +88,8 @@ for ibin in range(h.GetXaxis().GetNbins()):
 	hup.GetXaxis().LabelsOption('v')
 	hdw.GetXaxis().LabelsOption('v')
 
-hrup = createRatio(hup, h, ROOT.kRed, 't#bar{t}')
-hrdw = createRatio(hdw, h, ROOT.kBlue, 't#bar{t}')
+hrup = createRatio(hup, createH(f, protagonist), ROOT.kRed, "%s" %('t#bar{t}' if (sys.argv)<6 else protagonist))
+hrdw = createRatio(hdw, createH(f, protagonist), ROOT.kBlue,"%s" %('t#bar{t}' if (sys.argv)<6 else protagonist))
 c, pad1, pad2 = createCanvasPads2()
 
 pad1.cd()
@@ -124,8 +127,8 @@ leg = ROOT.TLegend( 0.66, 0.63, 0.84, 0.88 )
 leg.SetFillColor(0)
 leg.SetLineColor(0)
 leg.AddEntry(h, "t#bar{t} (central value)", "L")
-leg.AddEntry(hup, "t#bar{t} sys up (+1#sigma)", "L")
-leg.AddEntry(hdw, "t#bar{t} sys down (-1#sigma)", "L")
+leg.AddEntry(hup, "%s sys up (+1#sigma)" %('t#bar{t}' if (sys.argv)<6 else protagonist), "L")
+leg.AddEntry(hdw, "%s sys down (-1#sigma)" %('t#bar{t}' if (sys.argv)<6 else protagonist), "L")
 leg.AddEntry(h_st, "single top", "L")
 leg.AddEntry(h_vj, "V+jets", "L")
 leg.AddEntry(h_qcd, "QCD", "L")
