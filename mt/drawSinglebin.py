@@ -1,4 +1,4 @@
-#!/bin/usr/python
+#!/usr/bin/python
 import ROOT as r
 import binning
 import sys
@@ -9,8 +9,8 @@ drawibin = int(sys.argv[2])
 
 drawXmin = -4
 drawXmax = 4
-drawYmin = -0.2 #-0.1 #0.9
-drawYmax = 0.25 #0.3 #1.3
+drawYmin = -0.1 #-0.1 #0.9
+drawYmax = 0.1 #0.3 #1.3
 outfile = 'singlebin/'+njets+'/bin'+str(drawibin)+'.png'
 
 c = r.TCanvas("c", "c", 520, 500)
@@ -24,14 +24,12 @@ r.gStyle.SetGridColor(16)
 r.gStyle.SetGridStyle(7)
 
 f = r.TFile(njets+"/signal_proc_ch"+njets+".root")
-fold = r.TFile(njets+"/signal_proc_ch"+njets+"old.root")
 
 htot = []
 htotold = []
 for ibin in range(Numbins[njets]):
-	htot.append(f.Get("Graph;%i"%(ibin+1)))
-	htotold.append(fold.Get("Graph;%i"%(ibin+1)))
-#print htotold
+	htot.append(f.Get("parabola1GeV_bin%i"%(ibin+1)))
+	htotold.append(f.Get("parabola3GeV_bin%i"%(ibin+1)))
 
 
 htot[drawibin-1].GetXaxis().SetRangeUser(drawXmin, drawXmax)
@@ -44,8 +42,8 @@ htot[drawibin-1].GetXaxis().SetTitle("mass variation from nominal m_{t}=172.5 (G
 htot[drawibin-1].GetYaxis().SetTitle("relative variation of the yields")
 htot[drawibin-1].GetXaxis().SetLabelSize(0.05)
 htot[drawibin-1].GetYaxis().SetLabelSize(0.05)
-#htot[drawibin-1].Draw("AP")
-htot[drawibin-1].Draw()
+htot[drawibin-1].Draw("AP")
+#htot[drawibin-1].Draw()
 
 htotold[drawibin-1].GetXaxis().SetRangeUser(drawXmin, drawXmax)
 htotold[drawibin-1].GetYaxis().SetRangeUser(drawYmin, drawYmax)
@@ -60,7 +58,7 @@ leg.SetLineStyle(0);
 leg.SetBorderSize(0);
 leg.SetShadowColor(0);
 if njets != '6j':
-	leg.AddEntry(htot[drawibin-1], "%s jets" sys.argv[1][0], "lp")
+	leg.AddEntry(htot[drawibin-1], sys.argv[1][0]+" jets", "lp")
 else:
 	leg.AddEntry(htot[drawibin-1], "#geq6 jets", "lp")
 leg.Draw()
