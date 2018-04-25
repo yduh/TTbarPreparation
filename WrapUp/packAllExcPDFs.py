@@ -16,10 +16,12 @@ ADD_EXPSYS = True
 ADD_THSYS = True
 ADD_THSYS_ST = True
 ADD_NNLOpT = True
+ADD_QCDcsvSYS = False
 BreakDownJES = True
 #minevents = 30
 
 writeSysExp = ['btag', 'ltag', 'JER', 'pileup', 'MET', 'lep']
+writeSysExp_vj = ['btag', 'ltag', 'lep']
 writeSysTH = ['damp', 'isr', 'fsr', 'tune', 'color', 'bdecay', 'bfrag', 'mt1', 'mt3'] #'pdf', 'alpha' 'pdfsum', 'pdf1', 'pdf2' are TH1D, so needs to do hadd after
 writeSysTH_t = ['fsr', 'bdecay', 'bfrag'] #'pdf', 'alpha'
 #breakdownJES = ['AbsoluteStat', 'AbsoluteScale', 'AbsoluteMPFBias', 'Fragmentation', 'SinglePionECAL', 'SinglePionHCAL', 'TimePtEta', 'RelativePtBB', 'RelativePtEC1', 'RelativePtEC2', 'RelativeBal', 'RelativeFSR', 'RelativeStatFSR', 'RelativeStatEC', 'PileUpDataMC', 'PileUpPtRef', 'PileUpPtBB', 'PileUpPtEC1', 'PileUpPtEC2', 'FlavorQCD']
@@ -80,8 +82,6 @@ ftt = r.TFile(inpath+"skim_tt_PowhegP8_%s.root" %nominal) #hsig = ftt.Get("1.0y/
 ft = r.TFile(inpath+"skim_t.root")
 fvj = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimroot/skim_VnJets.root" %njets)
 fqcd = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB/skim_Tqcd.root" %njets)
-#fbckdown = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_comp1/skim_DATA_Tbck.root" %njets)
-#fbckup = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_comp2/skim_DATA_Tbck.root" %njets)
 
 hnominal = ftt.Get(kint)
 
@@ -90,8 +90,6 @@ hsig = Rebin.Absy(Rebin.newRebin2D(ftt.Get(kint), 'ttsig_temp', xbins, ybins), '
 ht = Rebin.Absy(Rebin.newRebin2D(ft.Get(kint), 'st_temp', xbins, ybins), 'st', xbins, absybins)
 hvj = Rebin.Absy(Rebin.newRebin2D(fvj.Get(kint), 'vjets_temp', xbins, ybins), 'vj', xbins, absybins)
 hqcd = Rebin.Absy(Rebin.newRebin2D(fqcd.Get(kint), 'qcd_temp', xbins, ybins), 'qcd', xbins, absybins)
-#hbckup = Rebin.Absy(Rebin.newRebin2D(fbckup.Get(kint), 'TbcksUp_temp', xbins, ybins), 'Tbcks_CSVcutUp', xbins, absybins)
-#hbckdown = Rebin.Absy(Rebin.newRebin2D(fbckdown.Get(kint), 'TbcksDown_temp', xbins, ybins), 'Tbcks_CSVcutDown', xbins, absybins)
 
 #MC bck templates:
 #fvjmc = r.TFile(inpath+"skim_Vj.root")
@@ -107,8 +105,15 @@ hqcd = Rebin.Absy(Rebin.newRebin2D(fqcd.Get(kint), 'qcd_temp', xbins, ybins), 'q
 #hqcdmcdown2 = Rebin.Absy(Rebin.newRebin2D(hqcdmcdown, 'qcdNorDown_temp', xbins, ybins), 'qcdNorDown', xbins, absybins)
 
 ############################################################################################################
-#if(ADD_QCDShapeSys):
-#	r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB/" %njets)
+if(ADD_QCDcsvSYS):
+	fcsvup = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_B0.3to0.6/skim_Tqcd.root" %njets)
+	fcsvdown = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_Aless0.3/skim_Tqcd.root" %njets)
+	#fcsvup = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_comp2/skim_Tqcd.root" %njets)
+	#fcsvdown = r.TFile("/afs/cern.ch/user/y/yduh/CMSSW_7_1_5/src/ttbar_preparation/WrapUp/%s/skimrootSB_comp1/skim_Tqcd.root" %njets)
+	hcsvup = Rebin.Absy(Rebin.newRebin2D(fcsvup.Get(kint), 'qcd_csvUp_temp', xbins, ybins), 'qcd_csvUp', xbins, absybins)
+	hcsvdown = Rebin.Absy(Rebin.newRebin2D(fcsvdown.Get(kint), 'qcd_csvDown_temp', xbins, ybins), 'qcd_csvDown', xbins, absybins)
+
+
 ############################################################################################################
 if(ADD_NNLOpT):
 	fnnloup = r.TFile(inpath+"skim_tt_PowhegP8_nnlopT.root")
@@ -314,7 +319,7 @@ if(ADD_EXPSYS):
 		SysExp.append(hup)
 		SysExp.append(hdw)
 
-	#for sys in writeSysExp:
+	#for sys in writeSysExp_vj:
 	#	fup = r.TFile(inpath+"skim_"+sys+"Up_VnJets.root","READ")
 	#	fdw = r.TFile(inpath+"skim_"+sys+"Down_VnJets.root","READ")
 	#	FileExp.append(fup)
@@ -358,7 +363,7 @@ if(ADD_EXPSYS):
 ############################################################################################################
 os.system("mkdir -p "+outpath)
 outfileshow = r.TFile(outpath+"ch%sdraw2d.root"%njets, "RECREATE")
-writeComponents = [hdata, hsig, ht, hvj, hqcd]#, hbckup, hbckdown] #hvjmcup, hvjmcdown, hqcdmcup, hqcdmcdown
+writeComponents = [hdata, hsig, ht, hvj, hqcd, hcsvup, hcsvdown] if(ADD_QCDcsvSYS) else [hdata, hsig, ht, hvj, hqcd]
 
 SysTH = []
 SysTH_t = []
@@ -376,6 +381,7 @@ print "SysTH_t:",SysTH_t
 for his in writeComponents:
 	his.Write()
 	hlist.append(his)
+
 if(ADD_EXPSYS):
 	for his in SysExp:
 		#his = r.gDirectory.Get(his)
@@ -470,8 +476,8 @@ for h in hlist:
 					opthall.SetBinContent(optbin, carry)
 					opthall.SetBinError(optbin, sqrt(Ecarry))
 				else:
-					opthall.SetBinContent(optbin, 0.01)
-					opthall.SetBinError(optbin, sqrt(0.01))
+					opthall.SetBinContent(optbin, 0.0001)
+					opthall.SetBinError(optbin, sqrt(Ecarry))
 
 				bee = 0
 				carry = 0
