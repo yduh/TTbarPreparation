@@ -7,7 +7,7 @@ from SCALE import *
 import ScaleBook
 from vararg import Varargs
 
-folderskimroot = "skimroot"
+folderskimroot = "skimroot_bmedium"
 if sys.argv[1][2:6] == 'Tbck':
 	#if 'comp' in sys.argv[-1] or 'CSV' in sys.argv[-1]:
 	if 'noEW' not in sys.argv[-1]:
@@ -16,7 +16,7 @@ if sys.argv[1][2:6] == 'Tbck':
 		folderskimroot = 'skimrootSB'
 else:
 	if sys.argv[-1] == 'noEW' or sys.argv[-1] == 'nnlopT' or '.0y' in sys.argv[-1]:
-		folderskimroot = 'skimroot'
+		folderskimroot = 'skimroot_bmedium'
 	else:
 		folderskimroot = 'skimroot_'+sys.argv[-1]
 
@@ -38,7 +38,10 @@ for i in range(len(sys.argv[3:-1])):
 	for histname, info in varargs.iteritems():
 		histname = '3j'+histname if '3j' in sys.argv[1] else 'yukawa'+histname
 		his = f.Get(sys.argv[3+i]+'/'+histname)
-		his.SetName(info.saveName)
+		if len(sys.argv[3:-1]) == 1:
+			his.SetName(info.saveName)
+		else:
+			his.SetName(info.saveName+'_'+sys.argv[3+i].split('_')[-1])
 		if info.getHistDim() == 1:
 			his.Rebin(*info.rebinFactors)
 		elif info.getHistDim() == 2:
@@ -106,9 +109,13 @@ else:
 #	skimroot = r.TFile(sys.argv[1]+"/"+folderskimroot+"/skim_"+sys.argv[2]+".root", "RECREATE")
 
 print Hists
-for i in range(len(sys.argv[3:-1])):
+if len(sys.argv[3:-1]) == 1:
 	for h in range(len(Hists)):
-		Hists[h].Write(Hists[h].GetName()+"_"+sys.argv[3+i].split("_")[-1])
+		Hists[h].Write(Hists[h].GetName()+"_"+sys.argv[3].split("_")[-1])
+else:
+	for h in range(len(Hists)):
+		Hists[h].Write()
+
 skimroot.Close()
 
 
