@@ -16,16 +16,33 @@ class Varargs:
 						'_Mtt_delY':	Info('mtt_dely',[10,60])
 						}
 
-	AddVarDict = {	'_MET':		Info('met', [5]),
-					'_lep_eta':	Info('lepeta', [40]),
-					'_tlep_pt':	Info('tlept', [20]),
-					'_thad_pt':	Info('thadpt', [20]),
-					'_tlep_y':	Info('tlepy', [10]),
-					'_thad_y':	Info('thady', [10]),
-					'_tt_pt':		Info('ttpt', [10]),
-					'_tt_y':		Info('tty', [5]),
+	AddVarDict = {	'_MET':				Info('met', [5]),
+					'_lep_eta':			Info('lepeta', [40]),
+					'_tlep_pt':			Info('tlept', [20]),
+					'_thad_pt':			Info('thadpt', [20]),
+					'_tlep_y':			Info('tlepy', [10]),
+					'_thad_y':			Info('thady', [10]),
+					'_tt_pt':			Info('ttpt', [10]),
+					'_tt_y':			Info('tty', [5]),
+					'_deltar_lepj':		Info('lepjDeltar', [10]),
+					'_deltar_lepj1':		Info('lepj1Deltar', [10]),
+					'_deltar_lepj2':		Info('lepj2Deltar', [10]),
+					'_deltar_lepj3':		Info('lepj3Deltar', [10]),
+					'_deltaphi_metj':	Info('metjDeltaphi', [10]),
+					'_deltaphi_metj1':	Info('metj1Deltaphi', [10]),
+					'_deltaphi_metj2':	Info('metj2Deltaphi', [10]),
+					'_deltaphi_metj3':	Info('metj3Deltaphi', [10]),
+					'_ptj1':			Info('ptj1', [5]),
+					'_ptj2':			Info('ptj2', [5]),
+					'_ptj3':			Info('ptj3', [5]),
+					'_deltar_lepj_deltaphi_metj':	Info('lepjDeltarmetjDeltaphi', [10,10]),
+					'_MTwl':			Info('mtwl', [10]),
+					'_thadM_right':		Info('thadMright', [5]),
+					'_thadM_wrong':		Info('thadMwrong', [5]),
+					'_nschi_right':		Info('nschiright', [3]),
+					'_nschi_wrong':		Info('nschiwrong', [3]),
  					#'btag_high':	Info('btaghigh', [5]),
-					#'btag_low':	Info('btaglow', [5])
+					#'btag_low':		Info('btaglow', [5])
 					#'all_massnutest':Info('')
 					}
 

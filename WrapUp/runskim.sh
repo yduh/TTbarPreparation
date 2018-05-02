@@ -4,13 +4,14 @@ nominal='noEW'
 #nominal='noEW_removetrigger'
 GT='noEW' #'0.0y 1.0y 2.0y 3.0y 4.0y 5.0y noEW'
 skimType='skimroot'
+skimTypeSB='skimrootSB'
 njets="$1"
 
 CR=false
 
-RunSig=false
-RunBcks=false
-RunSB=false
+RunSig=true
+RunBcks=true
+RunSB=true
 
 RunUnc_EXP=false
 RunUnc_EXPBCK=false
@@ -20,7 +21,7 @@ RunUnc_JES=false
 RunUnc_pT=false
 
 RunMultiSBs=false
-RunUnc_QCD=true
+RunUnc_QCD=false
 
 
 if $CR; then
@@ -31,7 +32,6 @@ if $CR; then
 else
 	SCRIPT='skim.py'
 	TbckSCRIPT='Tqcd.py'
-	#skimType='skimrootSB'
 fi
 
 if [ ${njets} == "3j" ]; then
@@ -53,20 +53,21 @@ if $RunSig; then
 		for gt in $GT
 		do
 			echo "tt_PowehgP8 ${gt}"
-			python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO_right ${vararg}_RECO_wrong ${vararg}_RECO_semi ${vararg}_RECO_other ${vararg}_RECO ${gt}
+			#python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO_right ${vararg}_RECO_wrong ${vararg}_RECO_semi ${vararg}_RECO_other ${vararg}_RECO ${gt}
+			python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO ${gt}
 		done
 	fi
 fi
 
 if $RunBcks; then
-	runbckList='DATA DYJets W1Jets W2Jets W3Jets W4Jets WW WZ STt_top STt_topbar Wt Wtbar WJets QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf'
+	runbckList='DATA DYJets W1Jets W2Jets W3Jets W4Jets WW WZ STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf'
 	##runList=$(ls ~/work/lpcresults/${njets}/noEW/*.root )
 	##runList=$(ls /afs/cern.ch/user/y/yduh/work/lpcresults/${njets}/${nominal}/*.root | cut -f 1 -d '.' | grep -v tt_*)
-	for unc in $runbckList; 
+	for comp in $runbckList; 
 	do
 		##python ${SCRIPT} ${njets} $(basename $i | cut -f 1 -d '.' | egrep -v '(tt_powhegP8|DATAEL|DATAMU)') ${vararg}_RECO $nominal
-		echo $unc
-		python ${SCRIPT} ${njets} ${unc} ${vararg}_RECO $nominal
+		echo $comp
+		python ${SCRIPT} ${njets} ${comp} ${vararg}_RECO $nominal
 	done
 
 	hadd -f ./${njets}/${skimType}/skim_WnJets.root ./${njets}/${skimType}/skim_W1Jets.root ./${njets}/${skimType}/skim_W2Jets.root ./${njets}/${skimType}/skim_W3Jets.root ./${njets}/${skimType}/skim_W4Jets.root
@@ -82,13 +83,30 @@ fi
 
 if $RunSB; then
 	echo "preparing the sideband templates"
-	if $CR; then
-		./runskimSB.sh ${njets} $nominal $CR $CRfolder
-	else
-		./runskimSB.sh ${njets} $nominal $CR 
-	fi
+	runbckList='DATA tt_PowhegP8 DYJets W1Jets W2Jets W3Jets W4Jets WW WZ STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf'
+	for comp in $runbckList;
+	do 
+		echo $comp
+		python ${SCRIPT} ${njets}Tbck ${comp} ${vararg}_RECO $nominal
+	done
+
+	hadd -f ./${njets}/${skimTypeSB}/skim_WnJets.root ./${njets}/${skimTypeSB}/skim_W1Jets.root ./${njets}/${skimTypeSB}/skim_W2Jets.root ./${njets}/${skimTypeSB}/skim_W3Jets.root ./${njets}/${skimTypeSB}/skim_W4Jets.root
+	hadd -f ./${njets}/${skimTypeSB}/skim_VnJets.root ./${njets}/${skimTypeSB}/skim_DYJets.root ./${njets}/${skimTypeSB}/skim_WnJets.root
+	hadd -f ./${njets}/${skimTypeSB}/skim_t.root ./${njets}/${skimTypeSB}/skim_STt_top.root ./${njets}/${skimTypeSB}/skim_STt_topbar.root ./${njets}/${skimTypeSB}/skim_Wt.root ./${njets}/${skimTypeSB}/skim_Wtbar.root
+
+	rm ./${njets}/${skimTypeSB}/skim_QCD.root
+	qcdfiles='*QCD*.root'
+	echo ${njets}'/'${skimTypeSB}'/'${qcdfiles}
+	hadd -f ./${njets}/${skimTypeSB}/skim_QCD.root ./${njets}/${skimTypeSB}/${qcdfiles}
+
+	#if $CR; then
+	#	./runskimSB.sh ${njets} $nominal $CR $CRfolder
+	#else
+	#	./runskimSB.sh ${njets} $nominal $CR 
+	#fi
 	python ${TbckSCRIPT} ${njets} $nominal
 fi
+
 
 if $RunUnc_QCD; then
 	#./runskimSB.sh ${njets} "comp1" false
@@ -101,8 +119,10 @@ if $RunUnc_QCD; then
 	#./runskimSB.sh ${njets} "CSVDown" false
 	#python ${TbckSCRIPT} ${njets} "CSVDown"
 	
-	./runskimSB.sh ${njets} "Aless0.3" $CR
+	./runskimSB.sh ${njets} "Aless0.3" false
 	python ${TbckSCRIPT} ${njets} "Aless0.3"
+	./runskimSB.sh ${njets} "B0.3to0.6" false
+	python ${TbckSCRIPT} ${njets} "B0.3to0.6"
 fi
 
 if $RunMultiSBs; then
@@ -137,11 +157,11 @@ if $RunUnc_TH; then
 	#runsysthList2='MCs/tt_mtop1755_PowhegP8 MCs/tt_mtop1695_PowhegP8 MCs/tt_hdup_PowhegP8 MCs/tt_hddown_PowhegP8 MCs/tt_isrup_PowhegP8 MCs/tt_isrdown_PowhegP8 MCs/tt_fsrup_PowhegP8 MCs/tt_fsrdown_PowhegP8 MCs/tt_tuneup_PowhegP8 MCs/tt_tunedown_PowhegP8 MCs/tt_erdon_PowhegP8'
 	runsysthList2='MCs/tt_mtop1735new_PowhegP8 MCs/tt_mtop1715new_PowhegP8 MCs/tt_mtop1735old_PowhegP8 MCs/tt_mtop1715old_PowhegP8 MCs/tt_mtop1735_PowhegP8 MCs/tt_mtop1715_PowhegP8'
 
-	for unc in $runsysthList1; 
-	do
-		echo $unc
-		python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
-	done
+	#for unc in $runsysthList1; 
+	#do
+	#	echo $unc
+	#	python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
+	#done
 	for unc in $runsysthList2; 
 	do
 		echo $unc
@@ -188,7 +208,8 @@ fi
 
 if $RunUnc_EXPBCK; then
 	echo "BCK Experimential uncertainties"
-	sysource='btagUp btagDown ltagUp ltagDown JERUp JERDown pileupUp pileupDown METUp METDown lepUp lepDown'
+	#sysource='btagUp btagDown ltagUp ltagDown JERUp JERDown pileupUp pileupDown METUp METDown lepUp lepDown'
+	sysource='btagUp btagDown ltagUp ltagDown lepUp lepDown'
 	#runbckList='DYJets W1Jets W2Jets W3Jets W4Jets' #try with the VnJets in 3j and the sys variations are all within statistics fluctuation  
 	runbckList='STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf'
 	

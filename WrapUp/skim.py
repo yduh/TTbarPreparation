@@ -7,7 +7,7 @@ from SCALE import *
 import ScaleBook
 from vararg import Varargs
 
-folderskimroot = "skimroot_bmedium"
+folderskimroot = "skimroot"
 if sys.argv[1][2:6] == 'Tbck':
 	#if 'comp' in sys.argv[-1] or 'CSV' in sys.argv[-1]:
 	if 'noEW' not in sys.argv[-1]:
@@ -16,7 +16,7 @@ if sys.argv[1][2:6] == 'Tbck':
 		folderskimroot = 'skimrootSB'
 else:
 	if sys.argv[-1] == 'noEW' or sys.argv[-1] == 'nnlopT' or '.0y' in sys.argv[-1]:
-		folderskimroot = 'skimroot_bmedium'
+		folderskimroot = 'skimroot'
 	else:
 		folderskimroot = 'skimroot_'+sys.argv[-1]
 
@@ -32,7 +32,7 @@ f = r.TFile("/afs/cern.ch/user/y/yduh/work/lpcresults/"+sys.argv[1]+"/"+sys.argv
 Hists = []
 
 varargs = Varargs().DefaultVarDict
-#varargs.update(Varargs().AddVarDict)
+varargs.update(Varargs().AddVarDict)
 
 for i in range(len(sys.argv[3:-1])):
 	for histname, info in varargs.iteritems():
