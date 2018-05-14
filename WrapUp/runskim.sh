@@ -1,62 +1,53 @@
 #!/bin/bash
 
 nominal='noEW'
-#nominal='noEW_removetrigger'
-GT='noEW' #'0.0y 1.0y 2.0y 3.0y 4.0y 5.0y noEW'
-skimType='skimroot'
-skimTypeSB='skimrootSB'
+GT='0.0y 1.0y 2.0y 3.0y 4.0y 5.0y noEW'
 njets="$1"
 
-CR=false
+###########################
+skimType='skimroot'
+skimTypeSB='skimrootSB'
+SCRIPT='skim.py'
+TbckSCRIPT='Tqcd.py'
 
+###########################
 RunSig=true
 RunBcks=true
 RunSB=true
 
 RunUnc_EXP=false
-RunUnc_EXPBCK=false
 RunUnc_TH=false
-RunUnc_THBCK=false
-RunUnc_JES=false
 RunUnc_pT=false
+RunUnc_JES=false
+###########################
+RunUnc_EXPBCK=false
+RunUnc_THBCK=false
 
-RunMultiSBs=false
 RunUnc_QCD=false
+###########################
+RunMultiSBs=false
 
+###########################
 
-if $CR; then
-	SCRIPT='skim1d.py'
-	TbckSCRIPT='Tbck1d.py'
-	CRfolder="$2" #'thadpt' #this should be the same like in vararg: folder_savename
-	#skimType='skimrootCR/'$CRfolder
-else
-	SCRIPT='skim.py'
-	TbckSCRIPT='Tqcd.py'
-fi
 
 if [ ${njets} == "3j" ]; then
 	vararg='3j'
 else
 	vararg='YUKAWA'
 fi
-
 echo "you are runing on "${njets}
 
-if $RunUnc_pT; then
-	python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO 'nnlopT'
-fi
 
 if $RunSig; then
-	if $CR; then
-		python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO ${nominal}
-	else
-		for gt in $GT
-		do
-			echo "tt_PowehgP8 ${gt}"
-			#python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO_right ${vararg}_RECO_wrong ${vararg}_RECO_semi ${vararg}_RECO_other ${vararg}_RECO ${gt}
-			python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO ${gt}
-		done
-	fi
+    for gt in $GT;
+    do
+	echo "tt_PowehgP8 ${gt}"
+        if [ ${gt} == "noEW" ]; then 
+	    python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO_right ${vararg}_RECO_wrong ${vararg}_RECO_semi ${vararg}_RECO_other ${vararg}_RECO ${gt}
+        else
+	    python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO ${gt}
+        fi
+    done
 fi
 
 if $RunBcks; then
@@ -99,11 +90,6 @@ if $RunSB; then
 	echo ${njets}'/'${skimTypeSB}'/'${qcdfiles}
 	hadd -f ./${njets}/${skimTypeSB}/skim_QCD.root ./${njets}/${skimTypeSB}/${qcdfiles}
 
-	#if $CR; then
-	#	./runskimSB.sh ${njets} $nominal $CR $CRfolder
-	#else
-	#	./runskimSB.sh ${njets} $nominal $CR 
-	#fi
 	python ${TbckSCRIPT} ${njets} $nominal
 fi
 
@@ -154,20 +140,63 @@ fi
 if $RunUnc_TH; then
 	echo "Theoretical uncertainties:"
 	runsysthList1='fsUp fsDown rsUp rsDown rsfsSSUp rsfsSSDown bdecayUp bdecayDown bfragUp bfragDown'
-	#runsysthList2='MCs/tt_mtop1755_PowhegP8 MCs/tt_mtop1695_PowhegP8 MCs/tt_hdup_PowhegP8 MCs/tt_hddown_PowhegP8 MCs/tt_isrup_PowhegP8 MCs/tt_isrdown_PowhegP8 MCs/tt_fsrup_PowhegP8 MCs/tt_fsrdown_PowhegP8 MCs/tt_tuneup_PowhegP8 MCs/tt_tunedown_PowhegP8 MCs/tt_erdon_PowhegP8'
-	runsysthList2='MCs/tt_mtop1735new_PowhegP8 MCs/tt_mtop1715new_PowhegP8 MCs/tt_mtop1735old_PowhegP8 MCs/tt_mtop1715old_PowhegP8 MCs/tt_mtop1735_PowhegP8 MCs/tt_mtop1715_PowhegP8'
+	runsysthList2='MCs/tt_mtop1735new_PowhegP8 MCs/tt_mtop1715new_PowhegP8 MCs/tt_mtop1735old_PowhegP8 MCs/tt_mtop1715old_PowhegP8 MCs/tt_hdup_PowhegP8 MCs/tt_hddown_PowhegP8 MCs/tt_isrup_PowhegP8 MCs/tt_isrdown_PowhegP8 MCs/tt_fsrup_PowhegP8 MCs/tt_fsrdown_PowhegP8 MCs/tt_tuneup_PowhegP8 MCs/tt_tunedown_PowhegP8 MCs/tt_erdon_PowhegP8'
 
-	#for unc in $runsysthList1; 
-	#do
-	#	echo $unc
-	#	python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
-	#done
-	for unc in $runsysthList2; 
+	for unc in $runsysthList1; 
+	do
+		echo $unc
+		python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
+	done
+
+        for unc in $runsysthList2; 
 	do
 		echo $unc
 		python ${SCRIPT} ${njets}unc ${unc} ${vararg}_RECO $nominal
 	done
 fi
+
+
+if $RunUnc_pT; then
+	python ${SCRIPT} ${njets} tt_PowhegP8 ${vararg}_RECO 'nnlopT'
+fi
+
+
+if $RunUnc_JES; then
+	echo "break down JES uncertainties for each components"
+	sysource='AbsoluteStat AbsoluteScale AbsoluteMPFBias Fragmentation SinglePionECAL SinglePionHCAL TimePtEta RelativePtBB RelativePtEC1 RelativePtEC2 RelativeBal RelativeFSR RelativeStatFSR RelativeStatEC PileUpDataMC PileUpPtRef PileUpPtBB PileUpPtEC1 PileUpPtEC2 FlavorQCD'
+	runbckList='STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf tt_PowhegP8'
+	
+	for unc in $sysource
+	do
+		echo $unc
+		for comp in $runbckList
+		do
+			echo $comp
+			python ${SCRIPT} ${njets}unc JESUp${unc}/${comp} ${vararg}_RECO $nominal
+			python ${SCRIPT} ${njets}unc JESDown${unc}/${comp} ${vararg}_RECO $nominal
+		done
+	
+		#hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_WnJets.root ./${njets}/${skimType}/skim_JESUp${unc}_W1Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W2Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W3Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W4Jets.root
+		#hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_WnJets.root ./${njets}/${skimType}/skim_JESDown${unc}_W1Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W2Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W3Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W4Jets.root
+		#hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_VnJets.root ./${njets}/${skimType}/skim_JESUp${unc}_DYJets.root ./${njets}/${skimType}/skim_JESUp${unc}_WnJets.root
+		#hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_VnJets.root ./${njets}/${skimType}/skim_JESDown${unc}_DYJets.root ./${njets}/${skimType}/skim_JESDown${unc}_WnJets.root
+		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_t.root ./${njets}/${skimType}/skim_JESUp${unc}_STt_top.root ./${njets}/${skimType}/skim_JESUp${unc}_STt_topbar.root ./${njets}/${skimType}/skim_JESUp${unc}_Wt.root ./${njets}/${skimType}/skim_JESUp${unc}_Wtbar.root
+		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_t.root ./${njets}/${skimType}/skim_JESDown${unc}_STt_top.root ./${njets}/${skimType}/skim_JESDown${unc}_STt_topbar.root ./${njets}/${skimType}/skim_JESDown${unc}_Wt.root ./${njets}/${skimType}/skim_JESDown${unc}_Wtbar.root
+
+		rm ./${njets}/${skimType}/skim_JESUp${unc}_QCD.root
+		rm ./${njets}/${skimType}/skim_JESDown${unc}_QCD.root
+		qcdfilesup='skim_JESUp'${unc}'_QCD*.root'
+		echo ${njets}'/'${skimType}'/'${qcdfilesup}
+		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_QCD.root ./${njets}/${skimType}/${qcdfilesup}
+		qcdfilesdw='skim_JESDown'${unc}'_QCD*.root'
+		echo ${njets}'/'${skimType}'/'${qcdfilesdw}
+		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_QCD.root ./${njets}/${skimType}/${qcdfilesdw}
+	done
+fi
+
+
+###########################
+###########################
 
 if $RunUnc_THBCK; then
 	echo "single top Theoretical uncertainties:"
@@ -234,38 +263,5 @@ if $RunUnc_EXPBCK; then
 fi
 
 	
-if $RunUnc_JES; then
-	echo "break down JES uncertainties for each components"
-	sysource='AbsoluteStat AbsoluteScale AbsoluteMPFBias Fragmentation SinglePionECAL SinglePionHCAL TimePtEta RelativePtBB RelativePtEC1 RelativePtEC2 RelativeBal RelativeFSR RelativeStatFSR RelativeStatEC PileUpDataMC PileUpPtRef PileUpPtBB PileUpPtEC1 PileUpPtEC2 FlavorQCD'
-	#runbckList='DYJets W1Jets W2Jets W3Jets W4Jets' #try with the VnJtes in 3j and the sys variation are all within statistics fluctuation
-	runbckList='STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf tt_PowhegP8'
-	
-	for unc in $sysource
-	do
-		echo $unc
-		for comp in $runbckList
-		do
-			echo $comp
-			python ${SCRIPT} ${njets}unc JESUp${unc}/${comp} ${vararg}_RECO $nominal
-			python ${SCRIPT} ${njets}unc JESDown${unc}/${comp} ${vararg}_RECO $nominal
-		done
-	
-		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_WnJets.root ./${njets}/${skimType}/skim_JESUp${unc}_W1Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W2Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W3Jets.root ./${njets}/${skimType}/skim_JESUp${unc}_W4Jets.root
-		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_WnJets.root ./${njets}/${skimType}/skim_JESDown${unc}_W1Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W2Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W3Jets.root ./${njets}/${skimType}/skim_JESDown${unc}_W4Jets.root
-		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_VnJets.root ./${njets}/${skimType}/skim_JESUp${unc}_DYJets.root ./${njets}/${skimType}/skim_JESUp${unc}_WnJets.root
-		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_VnJets.root ./${njets}/${skimType}/skim_JESDown${unc}_DYJets.root ./${njets}/${skimType}/skim_JESDown${unc}_WnJets.root
-		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_t.root ./${njets}/${skimType}/skim_JESUp${unc}_STt_top.root ./${njets}/${skimType}/skim_JESUp${unc}_STt_topbar.root ./${njets}/${skimType}/skim_JESUp${unc}_Wt.root ./${njets}/${skimType}/skim_JESUp${unc}_Wtbar.root
-		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_t.root ./${njets}/${skimType}/skim_JESDown${unc}_STt_top.root ./${njets}/${skimType}/skim_JESDown${unc}_STt_topbar.root ./${njets}/${skimType}/skim_JESDown${unc}_Wt.root ./${njets}/${skimType}/skim_JESDown${unc}_Wtbar.root
-
-		rm ./${njets}/${skimType}/skim_JESUp${unc}_QCD.root
-		rm ./${njets}/${skimType}/skim_JESDown${unc}_QCD.root
-		qcdfilesup='skim_JESUp'${unc}'_QCD*.root'
-		echo ${njets}'/'${skimType}'/'${qcdfilesup}
-		hadd -f ./${njets}/${skimType}/skim_JESUp${unc}_QCD.root ./${njets}/${skimType}/${qcdfilesup}
-		qcdfilesdw='skim_JESDown'${unc}'_QCD*.root'
-		echo ${njets}'/'${skimType}'/'${qcdfilesdw}
-		hadd -f ./${njets}/${skimType}/skim_JESDown${unc}_QCD.root ./${njets}/${skimType}/${qcdfilesdw}
-	done
-fi
 
 

@@ -20,14 +20,14 @@ else:
 	else:
 		folderskimroot = 'skimroot_'+sys.argv[-1]
 
-print 'root files read from the folder: ~/work/lpcresults/'+sys.argv[1]+"/"+sys.argv[-1]
+print 'root files read from the folder: ~/eos/results/'+sys.argv[1]+"/"+sys.argv[-1]
 print 'save skim files in the folder:', folderskimroot
 
 if(sys.argv[2] == 'DATA'):
-	path = "/afs/cern.ch/user/y/yduh/work/lpcresults/"+sys.argv[1]+"/"+sys.argv[-1]
+	path = "/uscms/home/yiting11/eos/results/"+sys.argv[1]+"/"+sys.argv[-1]
 	os.system("hadd -f "+path+"/DATA.root "+path+"/DATAEL.root "+path+"/DATAMU.root")
 
-f = r.TFile("/afs/cern.ch/user/y/yduh/work/lpcresults/"+sys.argv[1]+"/"+sys.argv[-1]+"/"+sys.argv[2]+".root")
+f = r.TFile('/uscms/home/yiting11/eos/results/'+sys.argv[1]+'/'+sys.argv[-1]+'/'+sys.argv[2]+'.root')
 
 Hists = []
 
@@ -90,15 +90,16 @@ if(sys.argv[2] == 'tt_PowhegP8'):
 #elif(sys.argv[2].split("/")[-1] == 'tt_PowhegP8' or sys.argv[2].split("/")[-1] == 'tt_mtop1755_PowhegP8' or sys.argv[2].split("/")[-1] == 'tt_mtop1695_PowhegP8'):
 #	skimroot = r.TFile(sys.argv[1]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
 elif(len(sys.argv[2].split("/")) == 2): #this only happens for the systematics
+        os.system("mkdir -p "+sys.argv[1][0:2]+"/"+folderskimroot+"/sys")
 	if(sys.argv[2].split("/")[0] == 'MCs'): #this is the one with dedicated MC samples
-		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[-1].split("_")[1]+"_tt_PowhegP8_"+sys.argv[-1]+".root", "RECREATE")
+		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[-1].split("_")[1]+"_tt_PowhegP8_"+sys.argv[-1]+".root", "RECREATE")
 	elif(sys.argv[2].split("/")[0] == 'STuncs'):
-		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[-1].split("_")[-1]+"_"+sys.argv[2].split("/")[-1].rsplit("_",1)[0]+".root", "RECREATE")
+		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[-1].split("_")[-1]+"_"+sys.argv[2].split("/")[-1].rsplit("_",1)[0]+".root", "RECREATE")
 	else:
 		if "PowhegP8" not in sys.argv[2].split("/")[-1]: #this is for bck sys
-			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
+			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
 		else:
-			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+"_"+sys.argv[-1]+".root", "RECREATE")
+			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+"_"+sys.argv[-1]+".root", "RECREATE")
 else:
 	skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2]+".root", "RECREATE")
 
