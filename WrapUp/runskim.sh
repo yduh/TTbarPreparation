@@ -21,7 +21,6 @@ RunUnc_TH=false
 RunUnc_pT=false
 RunUnc_JES=false
 ###########################
-RunUnc_EXPBCK=false
 RunUnc_THBCK=false
 
 RunUnc_QCD=false
@@ -141,7 +140,6 @@ if $RunUnc_EXP; then
             for comp in $runbckList;
             do
                 echo $comp
-	#	python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
 		python ${SCRIPT} ${njets}unc ${unc}/${comp} ${vararg}_RECO $nominal
             done
 	
@@ -249,32 +247,6 @@ if $RunUnc_THBCK; then
 fi
 
 
-if $RunUnc_EXPBCK; then
-	echo "BCK Experimential uncertainties"
-	#sysource='btagUp btagDown ltagUp ltagDown JERUp JERDown pileupUp pileupDown METUp METDown lepUp lepDown'
-	sysource='btagUp btagDown ltagUp ltagDown lepUp lepDown'
-	#runbckList='DYJets W1Jets W2Jets W3Jets W4Jets' #try with the VnJets in 3j and the sys variations are all within statistics fluctuation  
-	runbckList='STt_top STt_topbar Wt Wtbar QCDEM120 QCDEM170 QCDEM300 QCDEM50 QCDEM80 QCDEMInf QCDMu1000 QCDMu120 QCDMu170 QCDMu300 QCDMu470 QCDMu50 QCDMu600 QCDMu800 QCDMu80 QCDMuInf'
-	
-	for unc in $sysource
-	do
-		echo $unc
-		for comp in $runbckList
-		do
-			echo $comp
-			python ${SCRIPT} ${njets}unc ${unc}/${comp} ${vararg}_RECO $nominal
-		done
-		
-		hadd -f ./${njets}/${skimType}/skim_${unc}_WnJets.root ./${njets}/${skimType}/skim_${unc}_W1Jets.root ./${njets}/${skimType}/skim_${unc}_W2Jets.root ./${njets}/${skimType}/skim_${unc}_W3Jets.root ./${njets}/${skimType}/skim_${unc}_W4Jets.root
-		hadd -f ./${njets}/${skimType}/skim_${unc}_VnJets.root ./${njets}/${skimType}/skim_${unc}_DYJets.root ./${njets}/${skimType}/skim_${unc}_WnJets.root
-		hadd -f ./${njets}/${skimType}/skim_${unc}_t.root ./${njets}/${skimType}/skim_${unc}_STt_top.root ./${njets}/${skimType}/skim_${unc}_STt_topbar.root ./${njets}/${skimType}/skim_${unc}_Wt.root ./${njets}/${skimType}/skim_${unc}_Wtbar.root
-
-		rm ./${njets}/${skimType}/skim_${unc}_QCD.root
-		qcdfiles='skim_'${unc}'_QCD*.root'
-		echo ${njets}'/'${skimType}'/'${qcdfiles}
-		hadd -f ./${njets}/${skimType}/skim_${unc}_QCD.root ./${njets}/${skimType}/${qcdfiles}
-	done
-fi
 
 	
 
