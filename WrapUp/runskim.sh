@@ -16,10 +16,10 @@ RunSig=false
 RunBcks=false
 RunSB=false
 
-RunUnc_EXP=false
+RunUnc_EXP=true
 RunUnc_TH=false
-RunUnc_pT=true
-RunUnc_JES=true
+RunUnc_pT=false
+RunUnc_JES=false
 ###########################
 RunUnc_EXPBCK=false
 RunUnc_THBCK=false
@@ -138,10 +138,11 @@ if $RunUnc_EXP; then
 	for unc in $sysource; 
 	do
 	    echo $unc
-            for comp in $runbckList
+            for comp in $runbckList;
             do
                 echo $comp
-		python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
+	#	python ${SCRIPT} ${njets}unc ${unc}/tt_PowhegP8 ${vararg}_RECO $nominal
+		python ${SCRIPT} ${njets}unc ${unc}/${comp} ${vararg}_RECO $nominal
             done
 	
             hadd -f ./${njets}/${skimTypeSYS}/${unc}/skim_${unc}_t.root ./${njets}/${skimTypeSYS}/${unc}/skim_${unc}_STt_top.root ./${njets}/${skimTypeSYS}/${unc}/skim_${unc}_STt_topbar.root ./${njets}/${skimTypeSYS}/${unc}/skim_${unc}_Wt.root ./${njets}/${skimTypeSYS}/${unc}/skim_${unc}_Wtbar.root
