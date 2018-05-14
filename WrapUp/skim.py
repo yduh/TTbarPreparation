@@ -50,7 +50,7 @@ for i in range(len(sys.argv[3:-1])):
 		if(sys.argv[2][0:3] == 'QCD' or sys.argv[2].split("/")[-1][0:3] == 'QCD'):
 			if(len(sys.argv[2].split("/")) == 2):
 				qcdscale = eval(sys.argv[2].split("/")[-1]+'scale')
-				print "norm qcd scale", str(sys.argv[2].aplit("/")[-1]+'scale'), qcdscale, histname
+				print "norm qcd scale", str(sys.argv[2].split("/")[-1]+'scale'), qcdscale, histname
 			else:
 				qcdscale = eval(sys.argv[2]+'scale')
 				print "norm qcd scale", str(sys.argv[2]+'scale'), qcdscale, histname
