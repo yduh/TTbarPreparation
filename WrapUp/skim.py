@@ -15,7 +15,7 @@ if sys.argv[1][2:6] == 'Tbck':
 	else:
 		folderskimroot = 'skimrootSB'
 else:
-	if sys.argv[-1] == 'noEW' or sys.argv[-1] == 'nnlopT' or '.0y' in sys.argv[-1]:
+	if sys.argv[-1] == 'noEW' or sys.argv[-1] == 'nnlopt' or '.0y' in sys.argv[-1]:
 		folderskimroot = 'skimroot'
 	else:
 		folderskimroot = 'skimroot_'+sys.argv[-1]
@@ -90,16 +90,16 @@ if(sys.argv[2] == 'tt_PowhegP8'):
 #elif(sys.argv[2].split("/")[-1] == 'tt_PowhegP8' or sys.argv[2].split("/")[-1] == 'tt_mtop1755_PowhegP8' or sys.argv[2].split("/")[-1] == 'tt_mtop1695_PowhegP8'):
 #	skimroot = r.TFile(sys.argv[1]+"/"+folderskimroot+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
 elif(len(sys.argv[2].split("/")) == 2): #this only happens for the systematics
-        os.system("mkdir -p "+sys.argv[1][0:2]+"/"+folderskimroot+"/sys")
+        os.system("mkdir -p "+sys.argv[1][0:2]+"/"+folderskimroot+"SYS/"+sys.argv[2].split("/")[0])
 	if(sys.argv[2].split("/")[0] == 'MCs'): #this is the one with dedicated MC samples
-		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[-1].split("_")[1]+"_tt_PowhegP8_"+sys.argv[-1]+".root", "RECREATE")
+		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"SYS/"+sys.argv[2].split("/")[0]+"/skim_"+sys.argv[2].split("/")[-1].split("_")[1]+"_tt_PowhegP8_"+sys.argv[-1]+".root", "RECREATE")
 	elif(sys.argv[2].split("/")[0] == 'STuncs'):
-		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[-1].split("_")[-1]+"_"+sys.argv[2].split("/")[-1].rsplit("_",1)[0]+".root", "RECREATE")
+		skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"SYS/"+sys.argv[2].split("/")[0]+"/skim_"+sys.argv[2].split("/")[-1].split("_")[-1]+"_"+sys.argv[2].split("/")[-1].rsplit("_",1)[0]+".root", "RECREATE")
 	else:
 		if "PowhegP8" not in sys.argv[2].split("/")[-1]: #this is for bck sys
-			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
+			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"SYS/"+sys.argv[2].split("/")[0]+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+".root", "RECREATE")
 		else:
-			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/sys/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+"_"+sys.argv[-1]+".root", "RECREATE")
+			skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"SYS/"+sys.argv[2].split("/")[0]+"/skim_"+sys.argv[2].split("/")[0]+"_"+sys.argv[2].split("/")[-1]+"_"+sys.argv[-1]+".root", "RECREATE")
 else:
 	skimroot = r.TFile(sys.argv[1][0:2]+"/"+folderskimroot+"/skim_"+sys.argv[2]+".root", "RECREATE")
 
