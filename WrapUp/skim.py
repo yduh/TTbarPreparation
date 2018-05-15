@@ -69,16 +69,22 @@ for i in range(len(sys.argv[3:-1])):
 				for ibin in range(his.GetXaxis().GetNbins()):
 					if his.GetBinContent(ibin+1)< 0:
 						his.SetBinContent(ibin+1, 0)
+                        his.SetBinError(ibin+1, his.GetBinError(ibin+1))
 					his.SetBinContent(0, 0) #under flow
+                    his.SetBinError(0, his.GetBinError(0))
 					his.SetBinContent(his.GetXaxis().GetNbins()+1, 0) #upper flow
+                    his.SetBinError(his.GetXaxis().GetNbins()+1, his.GetBinError(his.GetXaxis().GetNbins()+1))
 				Hists.append(his)
 			elif info.getHistDim() ==2:
 				for ibinx in range(his.GetXaxis().GetNbins()):
 					for ibiny in range(his.GetYaxis().GetNbins()):
 						if his.GetBinContent(ibinx+1, ibiny+1)< 0:
 							his.SetBinContent(ibinx+1, ibiny+1, 0)
+							his.SetBinError(ibinx+1, ibiny+1, his.GetBinError(ibinx+1,ibiny+1))
 						his.SetBinContent(0, 0, 0)
+                        his.SetBinError(0, 0, his.GetBinError(0,0))
 						his.SetBinContent(his.GetXaxis().GetNbins()+1, his.GetYaxis().GetNbins()+1, 0)
+                        his.SetBinError(his.GetXaxis().GetNbins()+1, his.GetYaxis().GetNbins()+1, his.GetBinError(his.GetXaxis().GetNbins()+1,his.GetYaxis().GetNbins()+1))
 				Hists.append(his)
 
 

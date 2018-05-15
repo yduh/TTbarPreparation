@@ -166,6 +166,8 @@ if(ADD_THSYS):
 			#hrsfsendw.SetBinContent(xbin+1, ybin+1, mean + (rnnlo_dw*(envelope_dw-mean)))
 			hrsfsenup.SetBinContent(xbin+1, ybin+1, envelope_up)
 			hrsfsendw.SetBinContent(xbin+1, ybin+1, envelope_dw)
+			hrsfsenup.SetBinError(xbin+1, ybin+1, hrsfsSSup.GetBinError(xbin+1,ybin+1))#a little simplied case
+			hrsfsendw.SetBinError(xbin+1, ybin+1, hrsfsSSdown.GetBinError(xbin+1,ybin+1))#directly take the error from rsfs, the fitting result won't affect; this only shows the error bar of the up/down templates
 	print "rsfs:", hsig.Integral(), hrsfsenup.Integral(), hrsfsendw.Integral()
 	hrsfsenup.Scale(rnnlo_dw*(hsig.Integral()/hrsfsenup.Integral()))
 	hrsfsendw.Scale(rnnlo_up*(hsig.Integral()/hrsfsendw.Integral()))
@@ -476,7 +478,7 @@ for h in hlist:
 					opthall.SetBinContent(optbin, carry)
 					opthall.SetBinError(optbin, sqrt(Ecarry))
 				else:
-					opthall.SetBinContent(optbin, 0.0001)
+					opthall.SetBinContent(optbin, 0.0)
 					opthall.SetBinError(optbin, sqrt(Ecarry))
 
 				bee = 0
