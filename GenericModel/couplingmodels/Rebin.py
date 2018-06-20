@@ -1,11 +1,13 @@
 from array import array
 import ROOT as r
 import math
+from random import randint
 
 def quad(*xs):
 	return math.sqrt(sum(x*x for x in xs))
 
 def Absy(histogram, histoName, bin_arrayx, absbin_arrayy):
+	#new_histo = r.TH2D(histoName+str(randint(0,1000)), histogram.GetTitle()+"abs", len(bin_arrayx)-1, array("d", bin_arrayx), len(absbin_arrayy)-1, array("d", absbin_arrayy))
 	new_histo = r.TH2D(histoName, histogram.GetTitle()+"abs", len(bin_arrayx)-1, array("d", bin_arrayx), len(absbin_arrayy)-1, array("d", absbin_arrayy))
 	for x in range(new_histo.GetXaxis().GetNbins()):
 		for absy in range(new_histo.GetYaxis().GetNbins()):
