@@ -16,6 +16,18 @@ class Varargs:
 						'_Mtt_delY':	Info('mtt_dely',[10,60])
 						}
 
+	AddVarDictCRplot = {'_MET':				Info('MET', [1]),
+					'_lep_eta':			Info('lep_eta', [1]),
+					'_tlep_pt':			Info('tlep_pt', [1]),
+					'_thad_pt':			Info('thad_pt', [1]),
+					'_tlep_y':			Info('tlep_y', [1]),
+					'_thad_y':			Info('thad_y', [1]),
+					'_tt_pt':			Info('tt_pt', [1]),
+					'_tt_y':			Info('tt_y', [1]),
+					#'_shuffledlikelihood':Info('shuffledlikelihood', [1]),
+					#'_ptj1':			Info('ptj1', [1]),
+					}
+
 	AddVarDict = {	'_MET':				Info('met', [5]),
 					'_lep_eta':			Info('lepeta', [40]),
 					'_tlep_pt':			Info('tlept', [20]),
@@ -41,8 +53,8 @@ class Varargs:
 					#'_thadM_wrong':		Info('thadMwrong', [5]),
 					#'_nschi_right':		Info('nschiright', [3]),
 					#'_nschi_wrong':		Info('nschiwrong', [3]),
- 					'btag_high':	Info('btaghigh', [5]),
-					'btag_low':		Info('btaglow', [5])
+ 					#'btag_high':	Info('btaghigh', [5]),
+					#'btag_low':		Info('btaglow', [5])
 					#'all_massnutest':Info('')
 					}
 
